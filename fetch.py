@@ -1,3 +1,5 @@
+import traceback
+
 from pyquery import PyQuery as pq
 import requests
 import log
@@ -5,7 +7,7 @@ import time
 import notify
 
 # 南航招生信息列表
-url = 'http://cmee.nuaa.edu.cn/news_more.asp?lm2=9'
+url = 'http://cmee.nuaa.edu.cn/2724/list.htm'
 
 # 模拟请求头
 headers = {
@@ -18,7 +20,7 @@ def get_page(url):
     res = requests.get(url, headers=headers)
     if res:
         log.log_info('fetch:访问' + url)
-        page = res.content.decode('GBK')
+        page = res.content.decode('utf-8')
         return page, url
     else:
         log.log_error('fetch:访问' + url + '失败')
@@ -30,19 +32,22 @@ def get_news_list(param):
     page = param[0]
     doc = pq(page)
     try:
-        trs = doc('td[valign="top"] tr tr:eq(4) table tr').items()
+        trs = doc('div.border_tr td:eq(1) tr:eq(1) tr').items()
+        # print(trs)
+
         news_list = []
         for tr in trs:
             news = {}
             # 新闻日期
-            date = tr('td:eq(2)').text().replace('(', '').replace(')', '').strip()
+            date = tr('td:eq(2)').text().replace('（', '').replace('）', '').strip()
             news['date'] = date
+            # print(date)
             # 新闻url
             url = tr('td:eq(1) a').make_links_absolute('http://cmee.nuaa.edu.cn/').attr.href
             #         print(url)
             news['url'] = url
             # 新闻标题
-            title = tr('td:eq(1) a font').text()
+            title = tr('td:eq(1) a').text()
             news['title'] = title
 
             news_list.append(news)
@@ -50,7 +55,7 @@ def get_news_list(param):
             log.log_debug('fetch:解析列表成功' + str(news_list))
             return news_list
         else:
-            log.log_error('fetch:解析列表错误' + ob_url + '网站规则可能发生变化')
+            log.log_error('fetch:新闻列表为空' + ob_url + '网站规则可能发生变化')
     except:
         log.log_exception('fetch:解析列表错误' + ob_url + '网站规则可能发生变化')
 

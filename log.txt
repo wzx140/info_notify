@@ -1,2 +1,2 @@
-2018-09-25 18:58:12,839 - log - INFO : fetch:访问http://cmee.nuaa.edu.cn/news_more.asp?lm2=9
-2018-09-25 18:58:13,199 - log - INFO : fetch:访问http://cmee.nuaa.edu.cn/news_more.asp?lm2=9
+2018-10-05 08:34:09,626 - log - INFO : fetch:访问http://cmee.nuaa.edu.cn/2724/list.htm
+2018-10-05 08:34:09,674 - log - INFO : fetch:访问http://cmee.nuaa.edu.cn/2724/list.htm
